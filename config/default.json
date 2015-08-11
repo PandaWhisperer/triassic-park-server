@@ -1,0 +1,9 @@
+{
+  "db": {
+    "url": "mongodb://localhost/triassic-park"
+  },
+  "server": {
+    "port": 3000,
+    "logger": "common"
+  }
+}
