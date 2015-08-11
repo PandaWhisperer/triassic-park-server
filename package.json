@@ -12,5 +12,12 @@
     "server"
   ],
   "author": "Christoph Wagner <github@christophwagner.me>",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.13.3",
+    "config": "^1.15.0",
+    "express": "^4.13.3",
+    "mongoose": "^4.1.2",
+    "morgan": "^1.6.1"
+  }
 }
