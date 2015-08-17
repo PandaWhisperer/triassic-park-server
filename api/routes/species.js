@@ -27,13 +27,17 @@ router.post("/species", function(req, res, next) {
   });
 });
 
-// GET /species/:name
-router.get("/species/:id", function(req, res, next) {
-  Species.findById(req.params.id, function(err, species) {
+// Add a callback cook for the :name parameter
+// This will be executed before any of the below routes are called
+// Saves us from duplicating the same code again and again
+router.param("id", function(req, res, next, id) {
+  Species.findById(id, function(err, species) {
     if (err) {
       return next(err);
     } else if (species) {
-      res.json(species);
+      // species found - attach to request
+      req.species = species;
+      next();
     } else {
       // no match found - send a 404
       res.sendStatus(404);
@@ -41,40 +45,27 @@ router.get("/species/:id", function(req, res, next) {
   });
 });
 
+// GET /species/:name
+router.get("/species/:id", function(req, res, next) {
+  res.json(req.species);
+});
+
 // PUT /species/:name
 router.put("/species/:id", function(req, res, next) {
-  Species.findById(req.params.id, function(err, species) {
-    if (err) {
-      return next(err);
-    } else if (species) {
-      // update document with new data
-      species.set(req.body);
-      // ... and save
-      species.save(function(err) {
-        if (err) return next(err);
-        res.sendStatus(200);
-      });
-    } else {
-      // no match found - send a 404
-      res.sendStatus(404);
-    }
+  // update document with new data
+  req.species.set(req.body);
+
+  req.species.save(function(err) {
+    if (err) return next(err);
+    res.sendStatus(200);
   });
 });
 
 // DELETE /species/:name
 router.delete("/species/:id", function(req, res, next) {
-  Species.findById(req.params.id, function(err, species) {
-    if (err) {
-      return next(err);
-    } else if (species) {
-      species.remove(function(err) {
-        if (err) return next(err);
-        res.sendStatus(200);
-      });
-    } else {
-      // no match found - send a 404
-      res.sendStatus(404);
-    }
+  req.species.remove(function(err) {
+    if (err) return next(err);
+    res.sendStatus(200);
   });
 });
 
