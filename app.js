@@ -18,5 +18,6 @@ if (config.server.logger)
   app.use( logger(config.server.logger) );
 
 // load routes
+app.use( require("./api/routes") );
 
 module.exports = app;
